@@ -2,7 +2,7 @@ description: >
  FrSky Taranis transmitter as a joystick via USB cable
 
 match:
-  - 'FrSky FrSky Taranis*'
+  - 'FrSky Taranis*'
 
 controls:
   - channel: 1

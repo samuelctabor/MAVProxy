@@ -142,6 +142,24 @@ class Joystick(mp_module.MPModule):
             return
 
         for e in pygame.event.get():
+
+            if e.type == 1542:
+                # Ensure RC overrides stop being sent if the joystick 
+                # is disconnected.
+
+                # Zero the overrides.
+                override = self.module('rc').override
+
+                for i in range(self.module('rc').count):
+                    override[i] = 0
+
+                self.module('rc').set_override(override)
+
+                # Delete the joystick.
+                self.joystick = None
+
+                return
+
             override = self.module('rc').override[:]
             values = self.joystick.read()
             override = values + override[len(values):]
