@@ -23,7 +23,11 @@ from MAVProxy.modules.lib import mp_module
 from MAVProxy.modules.lib import mp_util
 from MAVProxy.modules.lib import mp_settings
 
-import casadiplanner_backend
+from MAVProxy.modules.lib import mp_util
+
+import pkg_resources
+
+from MAVProxy.modules.mavproxy_casadiplanner.casadiplanner_backend import CasadiPlannerBackend
 
 class casadiplanner(mp_module.MPModule):
 
@@ -45,6 +49,11 @@ class casadiplanner(mp_module.MPModule):
 
         self.add_command('casadiplan', self.cmd_casadiplan, "example module", ['status','set (LOGSETTING)'])
 
+        init_sol_fname = pkg_resources.resource_filename(__name__, 'InitialSolution.mat')
+        func_fname     = pkg_resources.resource_filename(__name__, 'OptimalSoaringFunc')
+
+        self.backend = CasadiPlannerBackend(init_sol_fname, func_fname)
+
     def usage(self):
         '''show help on command line options'''
         return "Usage: casadiplanner <status|set>"
@@ -61,7 +70,7 @@ class casadiplanner(mp_module.MPModule):
 
     def cmd_casadiplan(self, arg2):
        #print(arg2.toString())
-       res=casadiplanner_backend.plan()
+       res = self.backend.plan()
        print("Planning result %f" % res)
 
 
